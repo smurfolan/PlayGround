@@ -27,12 +27,12 @@ export default class MailboxItemDetailsScreen extends React.Component {
   render() {
       return (
         <ImageBackground source={{uri: this.state.snapshotUrl}} style={styles.container}>
-            <TouchableOpacity style={styles.navBarLeftButton}>
-              <Image style={{ width: 40, height: 40, margin: 5 }}
-                source={{ uri: this.state.statusIcon }}
-              />
-              <Text style={styles.buttonText}>{this.state.receivedAt}</Text>
-            </TouchableOpacity>
+            <View style={styles.innerView}>
+              <TouchableOpacity style={styles.innerTouchableContent}>
+                  <Image style={styles.innerTouchableContentImage} source={{ uri: this.state.statusIcon }}/>
+                  <Text>{this.state.receivedAt}</Text>
+              </TouchableOpacity>
+            </View>
         </ImageBackground>
       );
     }
@@ -44,20 +44,20 @@ export default class MailboxItemDetailsScreen extends React.Component {
         alignItems: 'center',
         justifyContent: 'center'
       },
-      inner: {
-        width: '90%',
-        height: '10%',
-        backgroundColor: 'rgba(255, 255, 255, .7)'
+      innerView: {
+        width: '90%', 
+        height: '15%'
       },
-      navBarLeftButton: {
-        width: '90%',
-        height: '10%',
+      innerTouchableContent: {
+        width: '100%',
+        height: '100%',
         backgroundColor: 'rgba(255, 255, 255, .7)',
-        paddingLeft: 8,
-        //width: 100,
-        flex: 1,
         flexDirection: 'row',
-        alignItems: 'center',
-        //justifyContent: 'flex-start'
+        alignItems:'center',
+        justifyContent: 'center'
+      },
+      innerTouchableContentImage: {
+        width: 40, 
+        height: 40
       }
   })

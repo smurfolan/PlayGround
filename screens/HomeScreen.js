@@ -32,14 +32,14 @@ export default class HomeScreen extends React.Component {
 
   renderItem = ({item}) => {
     return (
-      <TouchableOpacity style={{ flex: 1, flexDirection: 'row', marginBottom: 3 }}
+      <TouchableOpacity style={styles.touchableContent}
           onPress = {() => this.props.navigation.navigate('MailboxItems', {
             mailboxId: item.mailboxId
           })}>
-          <Image style={{ width: 40, height: 40, margin: 5 }}
+          <Image style={styles.touchableContentImage}
           source={{ uri: 'https://cdn2.iconfinder.com/data/icons/IconsLandVistaMapMarkersIconsDemo/256/MapMarker_Marker_Outside_Azure.png' }}
           />
-          <View style={{ flex: 1, justifyContent: 'center' }}>
+          <View style={styles.touchableContentMainText}>
               <Text style={{ fontSize: 16, color: 'green' }}>
                   {item.city}, {item.zipCode}
               </Text>
@@ -47,7 +47,7 @@ export default class HomeScreen extends React.Component {
                   {item.address}
               </Text>
           </View>
-          <View style={{justifyContent: 'flex-end', justifyContent: 'center', marginRight: 10}}>
+          <View style={styles.touchableContentNumberOfMailItems}>
               <Text style={{ fontSize: 16, fontWeight: 'bold' }}>
                   ({item.numberOfMailItems})
               </Text>
@@ -105,5 +105,24 @@ const styles = StyleSheet.create({
   container: {
       flex: 1,
       backgroundColor: '#F5FCFF'
+  },
+  touchableContent: {
+      flex: 1, 
+      flexDirection: 'row', 
+      marginBottom: 3
+  },
+  touchableContentImage: {
+      width: 40, 
+      height: 40, 
+      margin: 5
+  },
+  touchableContentMainText: {
+      flex: 1, 
+      justifyContent: 'center'
+  },
+  touchableContentNumberOfMailItems:{
+      justifyContent: 'flex-end',
+      justifyContent: 'center',
+      marginRight: 10
   }
 });

@@ -52,14 +52,14 @@ export default class MailboxItemsScreen extends React.Component {
 
   renderItem = ({item}) => {
     return (
-      <TouchableOpacity style={{ flex: 1, flexDirection: 'row', marginBottom: 3 }}
+      <TouchableOpacity style={styles.touchableContent}
           onPress = {() => this.props.navigation.navigate('MailboxItemDetails', {
             mailItemId: item.mailItemId,
             receivedAt: item.receivedAt,
             statusIcon: this.state.stateIconsMapping[item.status],
             snapshotUrl: item.snapshotUrl
           })}>
-          <Image style={{ width: 40, height: 40, margin: 5 }}
+          <Image style={styles.touchableContentImage}
           source={{ uri: this.state.stateIconsMapping[item.status] }}
           />
           <View style={{ flex: 1, justifyContent: 'center' }}>
@@ -75,18 +75,14 @@ export default class MailboxItemsScreen extends React.Component {
   }
 
   renderSeparator = () => {
-    return (
-        <View
-            style={{height: 1, width: '100%', backgroundColor: 'black'}}>
-        </View>
-    )
+    return (<View style={styles.rowsSeparator}></View>)
   }
 
   render() {
     return (
     this.state.isLoading
     ?
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    <View style={styles.activityIndicator}>
         <ActivityIndicator size="large" color="green" animating />
     </View>
     :
@@ -106,5 +102,25 @@ export default class MailboxItemsScreen extends React.Component {
     container: {
         flex: 1,
         backgroundColor: '#F5FCFF'
+    },
+    touchableContent:{
+        flex: 1,
+        flexDirection: 'row',
+        marginBottom: 3
+    },
+    touchableContentImage:{
+        width: 40,
+        height: 40,
+        margin: 5
+    },
+    rowsSeparator:{
+        height: 1,
+        width: '100%',
+        backgroundColor: 'black'
+    },
+    activityIndicator:{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
     }
   });
