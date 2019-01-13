@@ -20,8 +20,6 @@ export default class MailboxItemDetailsScreen extends React.Component {
       statusIcon: props.navigation.state.params.statusIcon,
       snapshotUrl: props.navigation.state.params.snapshotUrl
     };
-
-    console.log(this.state.statusIcon)
   }
 
   render() {

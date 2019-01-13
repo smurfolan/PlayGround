@@ -1,15 +1,8 @@
 import React from "react";
-import {
-    View,
-    Text,
-    StyleSheet,
-    FlatList,
-    Image,
-    ActivityIndicator,
-    TouchableOpacity
-  } from "react-native";
-
-import * as firebase from 'firebase';
+import NotificationService from '../services/NotificationService';
+import { Notifications } from 'expo';
+import firebase from 'firebase';
+import { View, Text, StyleSheet, FlatList, Image, ActivityIndicator, TouchableOpacity } from "react-native";
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = () => {
@@ -65,6 +58,11 @@ renderSeparator = () => {
 }
 
 componentDidMount(){
+  this._notificationSubscription = 
+    Notifications.addListener((notification) => {
+        NotificationService.handleNotification(notification, this.props.navigation)    
+    });
+
   const url = 'https://us-central1-peepnee-backend.cloudfunctions.net/getMyMailboxes?userId='
               + firebase.auth().currentUser.uid
 
@@ -79,6 +77,10 @@ componentDidMount(){
   .catch((error) => {
     console.log(error)
   })
+}
+
+componentWillUnmount(){
+    this._notificationSubscription.remove();
 }
 
 render(){
