@@ -1,15 +1,19 @@
 import React from 'react';
-import { View, StyleSheet, Image } from 'react-native';
+import { StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { withNavigation } from 'react-navigation';
 
 class NewMailItemDecisionButton extends React.Component{
+    constructor(props){
+        super(props)
+    }
+
     render(){
         return(
-            <View style={styles.menuItem}>
+            <TouchableOpacity {...this.props} style={styles.menuItem}>
                 <Image
                     source={{uri: this.props.itemImage}}
                     style={styles.image} />
-            </View>
+            </TouchableOpacity>
         )      
     }
 }
@@ -21,9 +25,9 @@ const styles = StyleSheet.create({
         width: '33.333333%',
         height: '50%',
         padding: 20,
-        backgroundColor: '#ccc',
-        borderColor: '#000',
-        borderWidth: 2
+        //backgroundColor: '#ccc',
+        //borderColor: '#000',
+        //borderWidth: 2
     },
     image:{
         width: '100%',

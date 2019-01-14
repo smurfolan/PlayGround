@@ -1,6 +1,8 @@
 import React from 'react';
 import { Text, View, ImageBackground, StyleSheet } from 'react-native';
 import NewMailItemDecisionButton from '../components/NewMailItemDecisionButton'
+import Enums from '../constants/Enums'
+import Constants from '../constants/Constants'
 
 export default class NewMailItemScreen extends React.Component{
     static navigationOptions = {
@@ -26,6 +28,16 @@ export default class NewMailItemScreen extends React.Component{
         console.log("New Mail Item scree was mounted")    
     }
 
+    _submitMailItemResponse(responseValue){
+        console.log("Response is:" + responseValue)
+        // 1. Submit the response to firebase
+        // 2. Stop the timer
+        // 3. Disable/Hide buttons
+        // 4. Replace timer value with ACCEPTED/DECLINED/REPEATED
+            // 4.1 If Accepted/Declined timeout for few seconds and navigate to MailboxItems screen
+            // 4.2 If REPEATED do nothing. We expected a new notification at some point/or not. 
+    }
+
     render() {
         return (
             <ImageBackground
@@ -37,11 +49,14 @@ export default class NewMailItemScreen extends React.Component{
                     </View>
                     <View style={styles.menuContainer}>
                         <NewMailItemDecisionButton
-                            itemImage={'https://cdn.iconscout.com/icon/free/png-256/cross-decline-false-reject-wrong-no-sign-6030.png'}/>
+                            onPress={() => {this._submitMailItemResponse(Enums.NEW_MAIL_ITEM_RESPONSE.DECLINED)}}
+                            itemImage={Constants.NEW_MAIL_ITEM_IMAGES.DECLINED}/>
                         <NewMailItemDecisionButton
-                            itemImage={'https://cdn.iconscout.com/icon/free/png-256/repeat-single-button-arrow-clockwise-37879.png'}/>
+                            onPress={() => {this._submitMailItemResponse(Enums.NEW_MAIL_ITEM_RESPONSE.REPEAT)}}
+                            itemImage={Constants.NEW_MAIL_ITEM_IMAGES.REPEAT}/>
                         <NewMailItemDecisionButton
-                            itemImage={'https://cdn2.iconfinder.com/data/icons/social-buttons-2/512/thumb_up-128.png'}/>
+                            onPress={() => {this._submitMailItemResponse(Enums.NEW_MAIL_ITEM_RESPONSE.ACCEPTED)}}
+                            itemImage={Constants.NEW_MAIL_ITEM_IMAGES.ACCEPTED}/>
                     </View>
                 </View>
             </ImageBackground>
