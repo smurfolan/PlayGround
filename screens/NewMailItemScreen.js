@@ -20,22 +20,82 @@ export default class NewMailItemScreen extends React.Component{
           waitForResponseUntil: props.navigation.state.params.waitForResponseUntil,
           snapshotUrl: props.navigation.state.params.snapshotUrl,
           ocrText: props.navigation.state.params.ocrText,
-          countDownSeconds: (responseWilBeExpectedUntil-startWaitingResponseFrom)/1000         
+
+          countDownSeconds: (responseWilBeExpectedUntil-startWaitingResponseFrom)/1000,
+          stringFormattedCountDownValue:'00:00',
+          decisionOnEmail: null
         };
-      }
+    }
+
+    _startCountDown(){
+        var self = this;
+        if(self.state.countDownSeconds > 0){
+            var refreshId = setInterval(function(){
+                var updatedTime = self.state.countDownSeconds - 1
+                self.setState({countDownSeconds: updatedTime})
+                self.setState({stringFormattedCountDownValue: "00:" + ("00" + updatedTime).slice(-2)})
+                if(updatedTime <= 0){
+                    self.setState({stringFormattedCountDownValue: Constants.TIME_PASSED})
+                    clearInterval(refreshId);
+                }
+
+                if(self.state.decisionOnEmail !== null){
+                    clearInterval(refreshId);
+                    self._submitMailItemResponse(self.state.decisionOnEmail)
+                }
+            }, 1000)
+        }
+        else{
+            self.setState({stringFormattedCountDownValue: Constants.TIME_PASSED})
+        }
+    }
 
     componentDidMount(){
-        console.log("New Mail Item scree was mounted")    
+        this._startCountDown() 
     }
 
     _submitMailItemResponse(responseValue){
-        console.log("Response is:" + responseValue)
-        // 1. Submit the response to firebase
-        // 2. Stop the timer
-        // 3. Disable/Hide buttons
-        // 4. Replace timer value with ACCEPTED/DECLINED/REPEATED
-            // 4.1 If Accepted/Declined timeout for few seconds and navigate to MailboxItems screen
-            // 4.2 If REPEATED do nothing. We expected a new notification at some point/or not. 
+        this._submitHttpUpdateRequest()
+        var self = this;
+
+        switch(responseValue) {
+            case 1:
+                self.setState({stringFormattedCountDownValue: Constants.NEW_MAIL_ITEM_DECISION_VERBAL.ACCEPTED})
+                break;
+            case 0:
+                self.setState({stringFormattedCountDownValue: Constants.NEW_MAIL_ITEM_DECISION_VERBAL.DECLINED})
+                break;
+            case 3:
+                self.setState({stringFormattedCountDownValue: Constants.NEW_MAIL_ITEM_DECISION_VERBAL.REPEAT})
+                break;
+        }
+        
+        self._navigateToMailItemsScreen();
+    }
+
+    _navigateToMailItemsScreen(){
+        var self = this
+        setTimeout(function(){
+            self.props.navigation.navigate('Home')
+        }, 3000)
+    }
+
+    _submitHttpUpdateRequest(){
+        const body = { 
+            mailItemId: this.state.mailItemId, 
+            updatedStatus: this.state.decisionOnEmail 
+        };
+ 
+        fetch('https://us-central1-peepnee-backend.cloudfunctions.net/updateMailItemStatus', {
+                method: 'post',
+                body:    JSON.stringify(body),
+                headers: { 'Content-Type': 'application/json' },
+            })
+            .then(res => res.json())
+            .then(json => console.log(json))
+            .catch((error) => {
+                console.log(error)
+            });
     }
 
     render() {
@@ -45,19 +105,22 @@ export default class NewMailItemScreen extends React.Component{
                 style={styles.container}>
                 <View style={styles.overlayContainer}>
                     <View style={styles.top}>
-                        <Text style={styles.header}>0 0 : 1 3</Text>
+                        <Text style={styles.header}>{this.state.stringFormattedCountDownValue}</Text>
                     </View>
+                    {this.state.countDownSeconds > 0 && this.state.decisionOnEmail === null ?
                     <View style={styles.menuContainer}>
                         <NewMailItemDecisionButton
-                            onPress={() => {this._submitMailItemResponse(Enums.NEW_MAIL_ITEM_RESPONSE.DECLINED)}}
+                            onPress={() => {this.setState({decisionOnEmail:Enums.NEW_MAIL_ITEM_RESPONSE.DECLINED})}}
                             itemImage={Constants.NEW_MAIL_ITEM_IMAGES.DECLINED}/>
                         <NewMailItemDecisionButton
-                            onPress={() => {this._submitMailItemResponse(Enums.NEW_MAIL_ITEM_RESPONSE.REPEAT)}}
+                            onPress={() => {this.setState({decisionOnEmail:Enums.NEW_MAIL_ITEM_RESPONSE.REPEAT})}}
                             itemImage={Constants.NEW_MAIL_ITEM_IMAGES.REPEAT}/>
                         <NewMailItemDecisionButton
-                            onPress={() => {this._submitMailItemResponse(Enums.NEW_MAIL_ITEM_RESPONSE.ACCEPTED)}}
+                            onPress={() => {this.setState({decisionOnEmail:Enums.NEW_MAIL_ITEM_RESPONSE.ACCEPTED})}}
                             itemImage={Constants.NEW_MAIL_ITEM_IMAGES.ACCEPTED}/>
                     </View>
+                    : null
+                    }                 
                 </View>
             </ImageBackground>
         );

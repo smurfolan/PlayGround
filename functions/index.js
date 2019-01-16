@@ -66,6 +66,19 @@ exports.getMailboxItems = functions.https.onRequest((req, res) => {
     })
 });
 
+exports.updateMailItemStatus = functions.https.onRequest((req, res) => {
+  if(req.method !== "POST"){
+    res.send(405, 'HTTP Method ' + req.method + ' not allowed');
+  }
+
+  var updatedStatus = req.body.updatedStatus
+  var mailItemId = req.body.mailItemId
+
+  db.ref('/MailItems/' + mailItemId).update({status: parseInt(updatedStatus)})
+
+  res.status(200).end('/MailItems/' + mailItemId)
+})
+
 exports.sendPushNotification = functions.database.ref('MailItems/{id}').onCreate((change, context) => {
     var usersToBeNotified = []
     var deviceExpoTokens = []
