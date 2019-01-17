@@ -66,6 +66,17 @@ exports.getMailboxItems = functions.https.onRequest((req, res) => {
     })
 });
 
+exports.getMailboxSettings = functions.https.onRequest((req, res) => {
+  var mailboxId = req.query.mailboxId
+
+  return db.ref('/Mailboxes')
+    .child(parseInt(mailboxId))
+    .once("value")
+    .then(snapshot => {
+      return res.send(JSON.stringify(snapshot))
+  })
+});
+
 exports.sendPushNotification = functions.database.ref('MailItems/{id}').onCreate((change, context) => {
     var usersToBeNotified = []
     var deviceExpoTokens = []
