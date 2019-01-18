@@ -77,6 +77,24 @@ exports.getMailboxSettings = functions.https.onRequest((req, res) => {
   })
 });
 
+exports.updateDefaultBoxSettings = functions.https.onRequest((req, res) => {
+  if(req.method !== "POST"){
+    res.send(405, 'HTTP Method ' + req.method + ' not allowed');
+  }
+
+  var mailboxId = req.body.mailboxId
+  var timeToWaitBeforeOpenOrCloseNewValue = req.body.timeToWaitBeforeOpenOrClose
+  var openByDefaultNewValue = req.body.openByDefault
+
+  db.ref('/Mailboxes/' + mailboxId).update(
+    {
+      openByDefault: openByDefaultNewValue,
+      timeToWaitBeforeOpenOrClose: parseInt(timeToWaitBeforeOpenOrCloseNewValue)
+    })
+  
+  res.status(200).end('/Mailboxes/' + mailboxId)
+})
+
 exports.sendPushNotification = functions.database.ref('MailItems/{id}').onCreate((change, context) => {
     var usersToBeNotified = []
     var deviceExpoTokens = []

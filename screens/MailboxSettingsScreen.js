@@ -1,21 +1,14 @@
 import React from 'react';
 import { Text, View, Button, StyleSheet, Switch, Picker } from 'react-native';
 
-// This peace of code is not a good practice (Descr. here https://github.com/react-navigation/react-navigation/issues/1468).
-// We need to avoid it and take a better approach of calling component funcs inside of navigation. 
-let _this = null;
-
 export default class SettingsScreen extends React.Component{
-  static navigationOptions = () => {
+  static navigationOptions = ({ navigation }) => {
     return {
-      headerStyle: {
-        backgroundColor: '#C173E8'
-      },
+      headerStyle: { backgroundColor: '#C173E8' },
       headerTintColor: '#fff',
       headerRight: (
-        <Button style={{marginRight:20}} color="#2196F3"
-          onPress={() => _this._saveDefaultBoxSettings()}
-          title="Save"
+        <Button title="Save" color="#2196F3"
+          onPress={() => navigation.state.params.updateDefaultBoxSettings()}  
         />
       )
     };
@@ -28,23 +21,50 @@ export default class SettingsScreen extends React.Component{
         mailboxAddress: null,
         mailboxCity: null,
         numberOfMailItems: null,
+        zipCode: null,
         openByDefault: false,
         timeToWaitBeforeOpenOrClose: null,
-        zipCode: null
+        // The following two are needed to determine if actual update was made
+        openByDefaultInitial: false,
+        timeToWaitBeforeOpenOrCloseInitial: null
       };
   }
 
-  _saveDefaultBoxSettings(){
-    alert("Mailbox Id:" 
-        + this.state.observedMailboxId 
-        + ", Seconds to wait:" 
-        + parseInt(this.state.timeToWaitBeforeOpenOrClose)
-        + ", default behavior:" 
-        + this.state.openByDefault)
+  _updateDefaultBoxSettings = () => {
+    if(this.state.openByDefault !== this.state.openByDefaultInitial ||
+        this.state.timeToWaitBeforeOpenOrClose !== this.state.timeToWaitBeforeOpenOrCloseInitial){
+          const body = { 
+            mailboxId: this.state.observedMailboxId, 
+            timeToWaitBeforeOpenOrClose: parseInt(this.state.timeToWaitBeforeOpenOrClose),
+            openByDefault: this.state.openByDefault
+          };
+
+          fetch('https://us-central1-peepnee-backend.cloudfunctions.net/updateDefaultBoxSettings', {
+                method: 'post',
+                body:    JSON.stringify(body),
+                headers: { 'Content-Type': 'application/json' },
+            })
+            .then(() => {
+              this.setState({
+                openByDefaultInitial: this.state.openByDefault,
+                timeToWaitBeforeOpenOrCloseInitial: this.state.timeToWaitBeforeOpenOrClose
+              })
+
+              alert("Saved!")
+            })
+            .catch((error) => {
+                alert("An error occured. Please, try later.")
+                console.log(error)
+            });
+      }
+      else{
+       alert("There was no change from initial state.") 
+      }
   }
 
   componentDidMount(){
-    _this = this;
+    this.props.navigation.setParams({ updateDefaultBoxSettings: this._updateDefaultBoxSettings });
+
     const url = 'https://us-central1-peepnee-backend.cloudfunctions.net/getMailboxSettings?mailboxId='
                 + this.state.observedMailboxId
   
@@ -55,9 +75,12 @@ export default class SettingsScreen extends React.Component{
         mailboxAddress: responseJson.address,
         mailboxCity: responseJson.city,
         numberOfMailItems: parseInt(responseJson.numberOfMailItems),
+        zipCode: parseInt(responseJson.zipCode),
         openByDefault: responseJson.openByDefault === true,
         timeToWaitBeforeOpenOrClose: parseInt(responseJson.timeToWaitBeforeOpenOrClose),
-        zipCode: parseInt(responseJson.zipCode)
+        openByDefaultInitial: responseJson.openByDefault === true,
+        timeToWaitBeforeOpenOrCloseInitial: parseInt(responseJson.timeToWaitBeforeOpenOrClose)
+        
       })
     })
     .catch((error) => {
