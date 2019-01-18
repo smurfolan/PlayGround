@@ -95,9 +95,25 @@ exports.updateDefaultBoxSettings = functions.https.onRequest((req, res) => {
   res.status(200).end('/Mailboxes/' + mailboxId)
 })
 
+exports.updateMailItemStatus = functions.https.onRequest((req, res) => {
+  if(req.method !== "POST"){
+    res.send(405, 'HTTP Method ' + req.method + ' not allowed');
+  }
+
+  var updatedStatus = req.body.updatedStatus
+  var mailItemId = req.body.mailItemId
+
+  db.ref('/MailItems/' + mailItemId).update({status: parseInt(updatedStatus)})
+
+  res.status(200).end('/MailItems/' + mailItemId)
+})
+
 exports.sendPushNotification = functions.database.ref('MailItems/{id}').onCreate((change, context) => {
     var usersToBeNotified = []
     var deviceExpoTokens = []
+    console.log("change: " + JSON.stringify(change));
+    console.log("context: " + JSON.stringify(context));
+
     //return the main promise
     return db.ref('/MailboxOwnership')
     .orderByChild('mailboxId')
@@ -116,10 +132,19 @@ exports.sendPushNotification = functions.database.ref('MailItems/{id}').onCreate
         snapshot.forEach(childSnapshot => {
           if(childSnapshot.val().isLoggedIn && usersToBeNotified.indexOf(childSnapshot.val().userId) > - 1){
             if(deviceExpoTokens.indexOf(childSnapshot.val().deviceExpoToken) < 0){
+              // The format of the message which can be submited via expo is described here:
+              // https://docs.expo.io/versions/latest/guides/push-notifications#message-format
               deviceExpoTokens.push(
                 {
                     "to": childSnapshot.val().deviceExpoToken,
-                    "body": "You have a new mail in your box."
+                    "body": "Postman is waiting for your reposense!",
+                    "data":{
+                      "mailboxId": change.mailboxId,
+                      "snapshotUrl": change.snapshotUrl,
+                      "mailItemId": context.params.id,
+                      "waitForResponseUntil": change.waitForResponseUntil,
+                      "ocrText": change.ocrText
+                    }
                 }
               )
             }
