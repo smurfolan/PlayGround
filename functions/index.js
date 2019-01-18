@@ -66,6 +66,35 @@ exports.getMailboxItems = functions.https.onRequest((req, res) => {
     })
 });
 
+exports.getMailboxSettings = functions.https.onRequest((req, res) => {
+  var mailboxId = req.query.mailboxId
+
+  return db.ref('/Mailboxes')
+    .child(parseInt(mailboxId))
+    .once("value")
+    .then(snapshot => {
+      return res.send(JSON.stringify(snapshot))
+  })
+});
+
+exports.updateDefaultBoxSettings = functions.https.onRequest((req, res) => {
+  if(req.method !== "POST"){
+    res.send(405, 'HTTP Method ' + req.method + ' not allowed');
+  }
+
+  var mailboxId = req.body.mailboxId
+  var timeToWaitBeforeOpenOrCloseNewValue = req.body.timeToWaitBeforeOpenOrClose
+  var openByDefaultNewValue = req.body.openByDefault
+
+  db.ref('/Mailboxes/' + mailboxId).update(
+    {
+      openByDefault: openByDefaultNewValue,
+      timeToWaitBeforeOpenOrClose: parseInt(timeToWaitBeforeOpenOrCloseNewValue)
+    })
+  
+  res.status(200).end('/Mailboxes/' + mailboxId)
+})
+
 exports.updateMailItemStatus = functions.https.onRequest((req, res) => {
   if(req.method !== "POST"){
     res.send(405, 'HTTP Method ' + req.method + ' not allowed');

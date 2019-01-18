@@ -6,10 +6,27 @@ import {
     FlatList,
     Image,
     ActivityIndicator,
-    TouchableOpacity 
+    TouchableOpacity ,
+    Button
   } from 'react-native';
 
 export default class MailboxItemsScreen extends React.Component {
+  static navigationOptions = (props) => {
+    return {
+      title: 'Items',
+      headerStyle: {
+        backgroundColor: '#C173E8'
+      },
+      headerTintColor: '#fff',
+      headerRight: (
+        <Button style={{marginRight:20}} color="#2196F3"
+          onPress={() => props.navigation.navigate('MailboxSettings', {mailboxId: props.navigation.state.params.mailboxId})}
+          title="Settings"
+        />
+      )
+    };
+  };
+
   constructor(props) {
     super(props);
     this.state = { 
@@ -22,16 +39,6 @@ export default class MailboxItemsScreen extends React.Component {
       }
     };
   }
-
-  static navigationOptions = () => {
-    return {
-      title: 'Mailbox items',
-      headerStyle: {
-        backgroundColor: '#1D9ED7'
-      },
-      headerTintColor: '#fff'
-    };
-  };
 
   componentDidMount(){
     const url = 'https://us-central1-peepnee-backend.cloudfunctions.net/getMailboxItems?mailboxId='

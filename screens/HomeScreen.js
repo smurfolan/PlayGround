@@ -9,7 +9,7 @@ export default class HomeScreen extends React.Component {
     return {
       title: 'Mailboxes',
       headerStyle: {
-        backgroundColor: '#1D9ED7',
+        backgroundColor: '#C173E8',
       },
       headerTintColor: '#fff'
     };

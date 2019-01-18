@@ -6,7 +6,7 @@ export default class MailboxItemDetailsScreen extends React.Component {
     return {
       title: 'Mailbox item details',
       headerStyle: {
-        backgroundColor: '#1D9ED7'
+        backgroundColor: '#C173E8'
       },
       headerTintColor: '#fff'
     };
