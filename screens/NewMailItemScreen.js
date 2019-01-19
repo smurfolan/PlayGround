@@ -91,7 +91,6 @@ export default class NewMailItemScreen extends React.Component{
                 body:    JSON.stringify(body),
                 headers: { 'Content-Type': 'application/json' },
             })
-            .then(res => res.json())
             .then(json => console.log(json))
             .catch((error) => {
                 console.log(error)
