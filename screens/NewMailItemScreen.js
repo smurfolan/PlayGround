@@ -86,7 +86,7 @@ export default class NewMailItemScreen extends React.Component{
             updatedStatus: this.state.decisionOnEmail 
         };
  
-        fetch('https://us-central1-peepnee-backend.cloudfunctions.net/updateMailItemStatus', {
+        fetch(Constants.FUNCTIONS_URL.UPDATE_MAIL_ITEM_STATUS, {
                 method: 'post',
                 body:    JSON.stringify(body),
                 headers: { 'Content-Type': 'application/json' },

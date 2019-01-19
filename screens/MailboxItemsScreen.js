@@ -9,11 +9,12 @@ import {
     TouchableOpacity ,
     Button
   } from 'react-native';
+  import Constants from '../constants/Constants'
 
 export default class MailboxItemsScreen extends React.Component {
   static navigationOptions = (props) => {
     return {
-      title: 'Items',
+      title: Constants.ITEMS_LBL,
       headerStyle: {
         backgroundColor: '#C173E8'
       },
@@ -21,7 +22,7 @@ export default class MailboxItemsScreen extends React.Component {
       headerRight: (
         <Button style={{marginRight:20}} color="#2196F3"
           onPress={() => props.navigation.navigate('MailboxSettings', {mailboxId: props.navigation.state.params.mailboxId})}
-          title="Settings"
+          title={Constants.SETTINGS_LBL}
         />
       )
     };
@@ -34,17 +35,14 @@ export default class MailboxItemsScreen extends React.Component {
       mailboxItems: [],
       isLoading: true,
       stateIconsMapping:{
-        0: 'https://img.icons8.com/cotton/2x/cancel.png',
-        1: 'https://cdn.pixabay.com/photo/2017/01/13/01/22/ok-1976099__340.png'
+        0: Constants.RECEIVED_MAIL_ITEM_STATUS_ICONS.DECLINED,
+        1: Constants.RECEIVED_MAIL_ITEM_STATUS_ICONS.ACCEPTED
       }
     };
   }
 
   componentDidMount(){
-    const url = 'https://us-central1-peepnee-backend.cloudfunctions.net/getMailboxItems?mailboxId='
-                + this.state.observedMailboxId
-  
-    fetch(url)
+    fetch(Constants.FUNCTIONS_URL.GET_MAILBOX_ITEMS + this.state.observedMailboxId)
     .then((response) => response.json())
     .then((responseJson) => {
       this.setState({

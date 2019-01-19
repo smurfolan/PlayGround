@@ -1,10 +1,11 @@
 import React from 'react';
-import { Icon, TouchableOpacity, Text, Image, View, ImageBackground, StyleSheet } from 'react-native';
+import { TouchableOpacity, Text, Image, View, ImageBackground, StyleSheet } from 'react-native';
+import Constants from '../constants/Constants'
 
 export default class MailboxItemDetailsScreen extends React.Component {
   static navigationOptions = () => {
     return {
-      title: 'Mailbox item details',
+      title: Constants.MAILBOX_ITEM_DETAILS,
       headerStyle: {
         backgroundColor: '#C173E8'
       },

@@ -3,11 +3,12 @@ import NotificationService from '../services/NotificationService';
 import { Notifications } from 'expo';
 import firebase from 'firebase';
 import { View, Text, StyleSheet, FlatList, Image, ActivityIndicator, TouchableOpacity } from "react-native";
+import Constants from '../constants/Constants'
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = () => {
     return {
-      title: 'Mailboxes',
+      title: Constants.MAILBOXES_LBL,
       headerStyle: {
         backgroundColor: '#C173E8',
       },
@@ -30,7 +31,7 @@ export default class HomeScreen extends React.Component {
             mailboxId: item.mailboxId
           })}>
           <Image style={styles.touchableContentImage}
-          source={{ uri: 'https://cdn2.iconfinder.com/data/icons/IconsLandVistaMapMarkersIconsDemo/256/MapMarker_Marker_Outside_Azure.png' }}
+          source={{ uri: Constants.MAILBOX_ICON }}
           />
           <View style={styles.touchableContentMainText}>
               <Text style={{ fontSize: 16, color: 'green' }}>
@@ -63,10 +64,7 @@ componentDidMount(){
         NotificationService.handleNotification(notification, this.props.navigation)    
     });
 
-  const url = 'https://us-central1-peepnee-backend.cloudfunctions.net/getMyMailboxes?userId='
-              + firebase.auth().currentUser.uid
-
-  fetch(url)
+  fetch(Constants.FUNCTIONS_URL.GET_MY_MAILBOXES + firebase.auth().currentUser.uid)
   .then((response) => response.json())
   .then((responseJson) => {
     this.setState({

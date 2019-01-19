@@ -1,13 +1,15 @@
 import React from 'react';
 import { Text, View, Button, StyleSheet, Switch, Picker } from 'react-native';
 
-export default class SettingsScreen extends React.Component{
+import Constants from '../constants/Constants'
+
+export default class MailboxSettingsScreen extends React.Component{
   static navigationOptions = ({ navigation }) => {
     return {
       headerStyle: { backgroundColor: '#C173E8' },
       headerTintColor: '#fff',
       headerRight: (
-        <Button title="Save" color="#2196F3"
+        <Button title={Constants.SAVE_LBL} color="#2196F3"
           onPress={() => navigation.state.params.updateDefaultBoxSettings()}  
         />
       )
@@ -65,10 +67,7 @@ export default class SettingsScreen extends React.Component{
   componentDidMount(){
     this.props.navigation.setParams({ updateDefaultBoxSettings: this._updateDefaultBoxSettings });
 
-    const url = 'https://us-central1-peepnee-backend.cloudfunctions.net/getMailboxSettings?mailboxId='
-                + this.state.observedMailboxId
-  
-    fetch(url)
+    fetch(Constants.FUNCTIONS_URL.GET_MAILBOX_SETTINGS + this.state.observedMailboxId)
     .then((response) => response.json())
     .then((responseJson) => {
       this.setState({
@@ -79,8 +78,7 @@ export default class SettingsScreen extends React.Component{
         openByDefault: responseJson.openByDefault === true,
         timeToWaitBeforeOpenOrClose: parseInt(responseJson.timeToWaitBeforeOpenOrClose),
         openByDefaultInitial: responseJson.openByDefault === true,
-        timeToWaitBeforeOpenOrCloseInitial: parseInt(responseJson.timeToWaitBeforeOpenOrClose)
-        
+        timeToWaitBeforeOpenOrCloseInitial: parseInt(responseJson.timeToWaitBeforeOpenOrClose)      
       })
     })
     .catch((error) => {
@@ -91,31 +89,35 @@ export default class SettingsScreen extends React.Component{
   render(){
     return (
       <View style={styles.container}>
-        <View style={styles.sectionHeader}><Text style={styles.sectionHeaderText}>Mailbox info</Text>
+        <View style={styles.sectionHeader}><Text style={styles.sectionHeaderText}>{Constants.MAILBOX_INFO_LBL}</Text>
         </View>
 
         <View style={styles.widgetsContainer}>
           <View style={styles.mailboxInfoRow}>
-            <Text style={styles.mailboxInfoRowLabel}>City</Text><Text>{this.state.mailboxCity}</Text>
+            <Text style={styles.mailboxInfoRowLabel}>{Constants.CITY_LBL}</Text>
+            <Text>{this.state.mailboxCity}</Text>
           </View>
           <View style={styles.mailboxInfoRow}>
-            <Text style={styles.mailboxInfoRowLabel}>Address</Text><Text>{this.state.mailboxAddress}</Text>
+            <Text style={styles.mailboxInfoRowLabel}>{Constants.ADDRESS_LBL}</Text>
+            <Text>{this.state.mailboxAddress}</Text>
           </View>
           <View style={styles.mailboxInfoRow}>
-            <Text style={styles.mailboxInfoRowLabel}>Zip Code</Text><Text>{this.state.zipCode}</Text>
+            <Text style={styles.mailboxInfoRowLabel}>{Constants.ZIP_CODE_LBL}</Text>
+            <Text>{this.state.zipCode}</Text>
           </View>
           <View style={styles.mailboxInfoRow}>
-            <Text style={styles.mailboxInfoRowLabel}>Unique identifier</Text><Text>{this.state.observedMailboxId}</Text>
+            <Text style={styles.mailboxInfoRowLabel}>{Constants.UNIQUE_IDENTIFIER_LBL}</Text>
+            <Text>{this.state.observedMailboxId}</Text>
           </View>
         </View>
 
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionHeaderText}>Update settings</Text>
+          <Text style={styles.sectionHeaderText}>{Constants.UPDATE_SETTINGS_LBL}</Text>
         </View>
 
         <View style={styles.widgetsContainer}>
           <View style={styles.updateSettingsRow}>
-            <Text style={styles.updateInfoRowLabel}>Default behavior after</Text>
+            <Text style={styles.updateInfoRowLabel}>{Constants.DEFAULT_BEHAVIOR_AFTER_LBL}</Text>
             <Picker
               style={styles.pickerComponent}
               selectedValue={this.state.timeToWaitBeforeOpenOrClose}
@@ -126,7 +128,7 @@ export default class SettingsScreen extends React.Component{
             </Picker>
           </View>
           <View style={styles.updateSettingsRow}>
-            <Text style={styles.updateInfoRowLabel}>Open by default</Text>
+            <Text style={styles.updateInfoRowLabel}>{Constants.OPEN_BY_DEFAULT_LBL}</Text>
             <Switch 
               style={styles.switchComponent}
               value={this.state.openByDefault} 
