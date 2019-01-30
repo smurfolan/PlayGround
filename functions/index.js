@@ -111,8 +111,6 @@ exports.updateMailItemStatus = functions.https.onRequest((req, res) => {
 exports.sendPushNotification = functions.database.ref('MailItems/{id}').onCreate((change, context) => {
     var usersToBeNotified = []
     var deviceExpoTokens = []
-    console.log("change: " + JSON.stringify(change));
-    console.log("context: " + JSON.stringify(context));
 
     //return the main promise
     return db.ref('/MailboxOwnership')
@@ -139,11 +137,11 @@ exports.sendPushNotification = functions.database.ref('MailItems/{id}').onCreate
                     "to": childSnapshot.val().deviceExpoToken,
                     "body": "Postman is waiting for your reposense!",
                     "data":{
-                      "mailboxId": change.mailboxId,
-                      "snapshotUrl": change.snapshotUrl,
+                      "mailboxId": change.val().mailboxId,
+                      "snapshotUrl": change.val().snapshotUrl,
                       "mailItemId": context.params.id,
-                      "waitForResponseUntil": change.waitForResponseUntil,
-                      "ocrText": change.ocrText
+                      "waitForResponseUntil": change.val().waitForResponseUntil,
+                      "ocrText": change.val().ocrText
                     }
                 }
               )
