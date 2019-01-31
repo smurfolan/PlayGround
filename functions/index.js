@@ -166,3 +166,26 @@ exports.sendPushNotification = functions.database.ref('MailItems/{id}').onCreate
       return deviceExpoTokens
     })
 })
+
+exports.updateNumberOfMailboxItems = functions.database.ref('MailItems/{id}')
+.onUpdate((change) => {
+    const before = change.before  // DataSnapshot before the change
+    const after = change.after  // DataSnapshot after the change
+
+    if(before.val().status !== 1 && after.val().status === 1){
+      db.ref('/Mailboxes').child(before.val().mailboxId)
+        .once('value')
+        .then(function(snapshot){
+          var currentNumberOfMailItems = snapshot.val().numberOfMailItems
+          db.ref('/Mailboxes/' + before.val().mailboxId)
+          .update({numberOfMailItems: parseInt(currentNumberOfMailItems + 1)})
+
+          return 0
+        })
+        .catch(function(error) {
+          console.log(JSON.stringify(error));
+        });
+    }
+
+    return 0;
+})
