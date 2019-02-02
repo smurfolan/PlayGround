@@ -1,16 +1,4 @@
 export default {
-    // Icons
-    NEW_MAIL_ITEM_IMAGES: {
-      ACCEPTED: 'https://cdn2.iconfinder.com/data/icons/social-buttons-2/512/thumb_up-128.png',
-      DECLINED: 'https://cdn.iconscout.com/icon/free/png-256/cross-decline-false-reject-wrong-no-sign-6030.png',
-      REPEAT: 'https://cdn.iconscout.com/icon/free/png-256/repeat-single-button-arrow-clockwise-37879.png'
-    },
-    RECEIVED_MAIL_ITEM_STATUS_ICONS:{
-      ACCEPTED: 'https://cdn.pixabay.com/photo/2017/01/13/01/22/ok-1976099__340.png',
-      DECLINED: 'https://img.icons8.com/cotton/2x/cancel.png'
-    },
-    MAILBOX_ICON: 'https://cdn2.iconfinder.com/data/icons/IconsLandVistaMapMarkersIconsDemo/256/MapMarker_Marker_Outside_Azure.png',
-
     // Lables
     TIME_PASSED: 'TIME PASSED',
     NEW_MAIL_ITEM_DECISION_VERBAL:{

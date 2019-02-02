@@ -31,7 +31,7 @@ export default class HomeScreen extends React.Component {
             mailboxId: item.mailboxId
           })}>
           <Image style={styles.touchableContentImage}
-          source={{ uri: Constants.MAILBOX_ICON }}
+          source={require('../content/images/mailbox_Icon.png')}
           />
           <View style={styles.touchableContentMainText}>
               <Text style={{ fontSize: 16, color: 'green' }}>

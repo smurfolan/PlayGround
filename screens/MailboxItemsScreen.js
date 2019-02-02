@@ -33,11 +33,7 @@ export default class MailboxItemsScreen extends React.Component {
     this.state = { 
       observedMailboxId: props.navigation.state.params.mailboxId,
       mailboxItems: [],
-      isLoading: true,
-      stateIconsMapping:{
-        0: Constants.RECEIVED_MAIL_ITEM_STATUS_ICONS.DECLINED,
-        1: Constants.RECEIVED_MAIL_ITEM_STATUS_ICONS.ACCEPTED
-      }
+      isLoading: true
     };
   }
 
@@ -56,17 +52,18 @@ export default class MailboxItemsScreen extends React.Component {
   }
 
   renderItem = ({item}) => {
+    let icon = item.status == 0 
+                      ? require('../content/images/mailboxItemDeclined_Icon.png')
+                      : require('../content/images/mailboxItemAccepted_Icon.png')
     return (
       <TouchableOpacity style={styles.touchableContent}
           onPress = {() => this.props.navigation.navigate('MailboxItemDetails', {
             mailItemId: item.mailItemId,
             receivedAt: item.receivedAt,
-            statusIcon: this.state.stateIconsMapping[item.status],
+            itemStatus: item.status,
             snapshotUrl: item.snapshotUrl
           })}>
-          <Image style={styles.touchableContentImage}
-          source={{ uri: this.state.stateIconsMapping[item.status] }}
-          />
+          <Image style={styles.touchableContentImage} source={icon}/>
           <View style={{ flex: 1, justifyContent: 'center' }}>
               <Text style={{ fontSize: 16, color: 'green' }}>
                   {item.receivedAt}

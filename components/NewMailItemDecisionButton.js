@@ -11,7 +11,7 @@ class NewMailItemDecisionButton extends React.Component{
         return(
             <TouchableOpacity {...this.props} style={styles.menuItem}>
                 <Image
-                    source={{uri: this.props.itemImage}}
+                    source={this.props.itemImage}
                     style={styles.image} />
             </TouchableOpacity>
         )      

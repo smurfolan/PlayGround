@@ -110,13 +110,13 @@ export default class NewMailItemScreen extends React.Component{
                     <View style={styles.menuContainer}>
                         <NewMailItemDecisionButton
                             onPress={() => {this.setState({decisionOnEmail:Enums.NEW_MAIL_ITEM_RESPONSE.DECLINED})}}
-                            itemImage={Constants.NEW_MAIL_ITEM_IMAGES.DECLINED}/>
+                            itemImage={require('../content/images/newMailItemAction_Decline.png')}/>
                         <NewMailItemDecisionButton
                             onPress={() => {this.setState({decisionOnEmail:Enums.NEW_MAIL_ITEM_RESPONSE.REPEAT})}}
-                            itemImage={Constants.NEW_MAIL_ITEM_IMAGES.REPEAT}/>
+                            itemImage={require('../content/images/newMailItemAction_Repeat.png')}/>
                         <NewMailItemDecisionButton
                             onPress={() => {this.setState({decisionOnEmail:Enums.NEW_MAIL_ITEM_RESPONSE.ACCEPTED})}}
-                            itemImage={Constants.NEW_MAIL_ITEM_IMAGES.ACCEPTED}/>
+                            itemImage={require('../content/images/newMailItemAction_Accept.png')}/>
                     </View>
                     : null
                     }                 

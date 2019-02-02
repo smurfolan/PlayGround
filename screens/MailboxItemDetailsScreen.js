@@ -18,17 +18,20 @@ export default class MailboxItemDetailsScreen extends React.Component {
     this.state = { 
       mailItemId: props.navigation.state.params.mailItemId,
       receivedAt: props.navigation.state.params.receivedAt, 
-      statusIcon: props.navigation.state.params.statusIcon,
+      itemStatus: props.navigation.state.params.itemStatus,
       snapshotUrl: props.navigation.state.params.snapshotUrl
     };
   }
 
   render() {
+      let icon = this.state.itemStatus == 0 
+                      ? require('../content/images/mailboxItemDeclined_Icon.png')
+                      : require('../content/images/mailboxItemAccepted_Icon.png')
       return (
         <ImageBackground source={{uri: this.state.snapshotUrl}} style={styles.container}>
             <View style={styles.innerView}>
               <TouchableOpacity style={styles.innerTouchableContent}>
-                  <Image style={styles.innerTouchableContentImage} source={{ uri: this.state.statusIcon }}/>
+                  <Image style={styles.innerTouchableContentImage} source={icon} />
                   <Text>{this.state.receivedAt}</Text>
               </TouchableOpacity>
             </View>
