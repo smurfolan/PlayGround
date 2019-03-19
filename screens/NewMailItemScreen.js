@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     },
     overlayContainer:{
         flex: 1,
-        backgroundColor: 'rgba(47, 163, 218, .4)'
+        // backgroundColor: 'rgba(47, 163, 218, .4)'
     },
     top:{
         height: '50%',
