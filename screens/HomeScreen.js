@@ -63,7 +63,10 @@ componentDidMount(){
     Notifications.addListener((notification) => {
         NotificationService.handleNotification(notification, this.props.navigation)    
     });
+    this.props.navigation.addListener('willFocus', this.fetchMyMailboxes)
+}
 
+fetchMyMailboxes = () => {
   fetch(Constants.FUNCTIONS_URL.GET_MY_MAILBOXES + firebase.auth().currentUser.uid)
   .then((response) => response.json())
   .then((responseJson) => {
