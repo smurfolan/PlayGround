@@ -52,9 +52,9 @@ export default class MailboxItemsScreen extends React.Component {
   }
 
   renderItem = ({item}) => {
-    let icon = item.status == 0 
-                      ? require('../content/images/mailboxItemDeclined_Icon.png')
-                      : require('../content/images/mailboxItemAccepted_Icon.png')
+    let icon = item.status == 1 
+                      ? require('../content/images/mailboxItemAccepted_Icon.png')
+                      : require('../content/images/mailboxItemDeclined_Icon.png')
     return (
       <TouchableOpacity style={styles.touchableContent}
           onPress = {() => this.props.navigation.navigate('MailboxItemDetails', {
