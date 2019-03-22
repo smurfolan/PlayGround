@@ -112,10 +112,12 @@ exports.sendPushNotification = functions.database.ref('MailItems/{id}').onCreate
     var usersToBeNotified = []
     var deviceExpoTokens = []
 
+    var changeValue = change.val()
+
     //return the main promise
     return db.ref('/MailboxOwnership')
     .orderByChild('mailboxId')
-    .equalTo(change.val().mailboxId)
+    .equalTo(changeValue.mailboxId)
     .once("value").then(snapshot => {
       snapshot.forEach(childSnapshot => {
         if(usersToBeNotified.indexOf(childSnapshot.val().userId) < 0){
@@ -135,13 +137,13 @@ exports.sendPushNotification = functions.database.ref('MailItems/{id}').onCreate
               deviceExpoTokens.push(
                 {
                     "to": childSnapshot.val().deviceExpoToken,
-                    "body": "Postman is waiting for your reposense!",
+                    "body": `${changeValue.topScoreImageTag}, ${changeValue.middleScoreImageTag}, ${changeValue.lowestScoreImageTag}`,
                     "data":{
-                      "mailboxId": change.val().mailboxId,
-                      "snapshotUrl": change.val().snapshotUrl,
+                      "mailboxId": changeValue.mailboxId,
+                      "snapshotUrl": changeValue.snapshotUrl,
                       "mailItemId": context.params.id,
-                      "waitForResponseUntil": change.val().waitForResponseUntil,
-                      "ocrText": change.val().ocrText
+                      "waitForResponseUntil": changeValue.waitForResponseUntil,
+                      "ocrText": changeValue.ocrText
                     }
                 }
               )
