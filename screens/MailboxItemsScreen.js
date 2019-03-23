@@ -69,7 +69,7 @@ export default class MailboxItemsScreen extends React.Component {
                   {item.receivedAt}
               </Text>
               <Text style={{ fontSize: 13, marginBottom: 15 }}>
-                  {item.ocrText}
+                  {item.topScoreImageTag}, {item.middleScoreImageTag}, {item.lowestScoreImageTag}
               </Text>
           </View>
       </TouchableOpacity>

@@ -53,12 +53,16 @@ exports.getMailboxItems = functions.https.onRequest((req, res) => {
     .equalTo(parseInt(mailboxId))
     .once("value").then(snapshot => {
       snapshot.forEach(childSnapshot => {
+        var snapshotValue = childSnapshot.val()
         mailboxItems.push({
           "mailItemId": childSnapshot.key,
-          "ocrText": childSnapshot.val().ocrText,
-          "snapshotUrl": childSnapshot.val().snapshotUrl,
-          "status": childSnapshot.val().status,
-          "receivedAt": childSnapshot.val().receivedAt
+          "ocrText": snapshotValue.ocrText,
+          "snapshotUrl": snapshotValue.snapshotUrl,
+          "status": snapshotValue.status,
+          "receivedAt": snapshotValue.receivedAt,
+          "topScoreImageTag": snapshotValue.topScoreImageTag,
+          "middleScoreImageTag": snapshotValue.middleScoreImageTag,
+          "lowestScoreImageTag": snapshotValue.lowestScoreImageTag
         })
       })
 
