@@ -138,10 +138,14 @@ exports.sendPushNotification = functions.database.ref('MailItems/{id}').onCreate
             if(deviceExpoTokens.indexOf(childSnapshot.val().deviceExpoToken) < 0){
               // The format of the message which can be submited via expo is described here:
               // https://docs.expo.io/versions/latest/guides/push-notifications#message-format
+              var topScoreImageTag = changeValue.topScoreImageTag !== '' ? changeValue.topScoreImageTag : ''
+              var middleScoreImageTag = changeValue.middleScoreImageTag !== '' ? `, ${changeValue.middleScoreImageTag}` : ''
+              var lowestScoreImageTag = changeValue.lowestScoreImageTag !== '' ? `, ${changeValue.lowestScoreImageTag}` : ''
+
               deviceExpoTokens.push(
                 {
                     "to": childSnapshot.val().deviceExpoToken,
-                    "body": `${changeValue.topScoreImageTag}, ${changeValue.middleScoreImageTag}, ${changeValue.lowestScoreImageTag}`,
+                    "body": `${topScoreImageTag}${middleScoreImageTag}${lowestScoreImageTag}`,
                     "data":{
                       "mailboxId": changeValue.mailboxId,
                       "snapshotUrl": changeValue.snapshotUrl,
