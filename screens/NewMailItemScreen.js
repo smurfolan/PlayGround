@@ -134,10 +134,12 @@ const styles = StyleSheet.create({
     },
     overlayContainer:{
         flex: 1,
-        // backgroundColor: 'rgba(47, 163, 218, .4)'
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        alignItems: 'center'
     },
     top:{
-        height: '50%',
+        height: '26%',
         alignItems: 'center',
         justifyContent: 'center'
     },
@@ -146,14 +148,15 @@ const styles = StyleSheet.create({
         fontSize: 28,
         borderColor: '#fff',
         borderWidth: 2,
-        padding: 20,
-        paddingLeft: 40,
-        paddingRight: 40,
+        padding: 10,
+        paddingLeft: 30,
+        paddingRight: 30,
         backgroundColor: 'rgba(255,255,255,.1)'
     },
     menuContainer:{
-        height: '40%',
+        height: '30%',
         flexDirection: 'row',
-        flexWrap: 'wrap'
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 })

@@ -23,16 +23,13 @@ export default withNavigation(NewMailItemDecisionButton);
 const styles = StyleSheet.create({
     menuItem:{
         width: '33.333333%',
-        height: '50%',
+        height: '70%',
         padding: 20,
-        //backgroundColor: '#ccc',
-        //borderColor: '#000',
-        //borderWidth: 2
     },
     image:{
-        width: '100%',
-        height: '100%',
-        opacity: 0.8,
+        width: '90%',
+        height: '90%',
+        //opacity: 0.8,
         borderColor: '#fff',
         borderWidth: 3
     }
