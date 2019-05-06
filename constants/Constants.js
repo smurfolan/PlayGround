@@ -24,7 +24,7 @@ export default {
     FUNCTIONS_URL:{
       GET_MAILBOX_SETTINGS: 'https://us-central1-peepnee-backend.cloudfunctions.net/getMailboxSettings?mailboxId=',
       UPDATE_MAIL_ITEM_STATUS: 'https://us-central1-peepnee-backend.cloudfunctions.net/updateMailItemStatus',
-      GET_MAILBOX_ITEMS: 'https://us-central1-peepnee-backend.cloudfunctions.net/getMailboxItems?mailboxId=',
+      GET_MAILBOX_ITEMS: 'https://us-central1-peepnee-backend.cloudfunctions.net/getMailboxItems?mailboxId={MAILBOX_ID}&anonymousMailRequested={REQUEST_ANONYMOUS}',
       GET_MY_MAILBOXES: 'https://us-central1-peepnee-backend.cloudfunctions.net/getMyMailboxes?userId='
     }
   };

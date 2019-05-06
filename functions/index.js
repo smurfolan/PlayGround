@@ -8,6 +8,30 @@ admin.initializeApp(functions.config().firebase);
 // Get a database reference
 var db = admin.database();
 
+function getSpecificAndFormattedMailboxItem(isAnonymoustMailItem, mailItemKey, mailItem){
+  if(isAnonymoustMailItem){
+    return {
+      "mailItemId": mailItemKey,
+      "ocrText": mailItem.ocrText,
+      "snapshotUrl": mailItem.snapshotUrl,
+      "status": mailItem.status,
+      "receivedAt": mailItem.receivedAt,
+      "topScoreImageTag": mailItem.topScoreImageTag,
+      "middleScoreImageTag": mailItem.middleScoreImageTag,
+      "lowestScoreImageTag": mailItem.lowestScoreImageTag
+    }
+  }
+  else {
+    return {
+      "mailItemId": mailItemKey,
+      "receivedAt": mailItem.receivedAt,
+      "rfidCompany": mailItem.rfidCompany,
+      "rfidTagOwner": mailItem.rfidTagOwner,
+      "rfidTagOwnerContact": mailItem.rfidTagOwnerContact
+    }
+  }
+}
+
 exports.getMyMailboxes = functions.https.onRequest((req, res) => {
     var userId = req.query.userId
     var mailboxesOwnedByThisUser = []
@@ -46,6 +70,7 @@ exports.getMyMailboxes = functions.https.onRequest((req, res) => {
 
 exports.getMailboxItems = functions.https.onRequest((req, res) => {
   var mailboxId = req.query.mailboxId
+  var requestIsForAnonymousMail = req.query.anonymousMailRequested !== 'false';
   var mailboxItems = []
 
   return db.ref('/MailItems')
@@ -54,16 +79,14 @@ exports.getMailboxItems = functions.https.onRequest((req, res) => {
     .once("value").then(snapshot => {
       snapshot.forEach(childSnapshot => {
         var snapshotValue = childSnapshot.val()
-        mailboxItems.push({
-          "mailItemId": childSnapshot.key,
-          "ocrText": snapshotValue.ocrText,
-          "snapshotUrl": snapshotValue.snapshotUrl,
-          "status": snapshotValue.status,
-          "receivedAt": snapshotValue.receivedAt,
-          "topScoreImageTag": snapshotValue.topScoreImageTag,
-          "middleScoreImageTag": snapshotValue.middleScoreImageTag,
-          "lowestScoreImageTag": snapshotValue.lowestScoreImageTag
-        })
+        if(snapshotValue.isAnonymous === requestIsForAnonymousMail){
+          var formattedMailItem = getSpecificAndFormattedMailboxItem(
+            requestIsForAnonymousMail, 
+            childSnapshot.key,
+            snapshotValue)
+            
+          mailboxItems.push(formattedMailItem)
+        }
       })
 
       return res.send(JSON.stringify(mailboxItems))
