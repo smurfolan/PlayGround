@@ -27,7 +27,7 @@ export default class AnonymousMailItemsScreen extends React.Component {
     .then((response) => response.json())
     .then((responseJson) => {
       this.setState({
-          mailboxItems: responseJson,
+          anonymousMailboxItems: responseJson,
           isLoading: false
       })
     })
@@ -42,7 +42,7 @@ export default class AnonymousMailItemsScreen extends React.Component {
                       : require('../../../content/images/mailboxItemDeclined_Icon.png')
     return (
       <TouchableOpacity style={styles.touchableContent}
-          onPress = {() => this.props.navigation.navigate('MailboxItemDetails', {
+          onPress = {() => this.props.navigation.navigate('AnonymousMailItemDetails', {
             mailItemId: item.mailItemId,
             receivedAt: item.receivedAt,
             itemStatus: item.status,
@@ -77,7 +77,7 @@ export default class AnonymousMailItemsScreen extends React.Component {
       :
       <View style={styles.container}>
         <FlatList style={{marginTop: 30}}
-            data={this.state.mailboxItems}
+            data={this.state.anonymousMailboxItems}
             renderItem={this.renderItem}
             keyExtractor={(item) => item.mailItemId}
             ItemSeparatorComponent={this.renderSeparator}

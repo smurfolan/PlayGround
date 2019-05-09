@@ -1,8 +1,8 @@
 import React from 'react';
 import { TouchableOpacity, Text, Image, View, ImageBackground, StyleSheet } from 'react-native';
-import Constants from '../constants/Constants'
+import Constants from '../../../constants/Constants'
 
-export default class MailboxItemDetailsScreen extends React.Component {
+export default class AnonymousMailItemDetailsScreen extends React.Component {
   static navigationOptions = () => {
     return {
       title: Constants.MAILBOX_ITEM_DETAILS,
@@ -25,8 +25,8 @@ export default class MailboxItemDetailsScreen extends React.Component {
 
   render() {
       let icon = this.state.itemStatus == 0 
-                      ? require('../content/images/mailboxItemDeclined_Icon.png')
-                      : require('../content/images/mailboxItemAccepted_Icon.png')
+                      ? require('../../../content/images/mailboxItemDeclined_Icon.png')
+                      : require('../../../content/images/mailboxItemAccepted_Icon.png')
       return (
         <ImageBackground source={{uri: this.state.snapshotUrl}} style={styles.container}>
             <View style={styles.innerView}>

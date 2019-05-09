@@ -18,6 +18,11 @@ export default {
     ITEMS_LBL: 'Items',
     SETTINGS_LBL: 'Settings',
     MAILBOXES_LBL: 'Mailboxes',
+    COMPANY_LBL: 'Company',
+    DELIVERY_PERSON_LBL: 'Delivery person',
+    CONTACT_LBL: 'Contact',
+    RECEIVED_AT_LBL: 'Received at',
+    REF_ID_LBL: 'Ref. Id',
     MAILBOX_ITEM_DETAILS: 'Mailbox item details',
 
     // Firebase function URLs
