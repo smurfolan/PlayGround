@@ -64,13 +64,24 @@ registerForPushNotificationsAsync = async (userInfo) => {
 // Handle incoming push notifications
 handleNotification = (notification, navigationContext) => {
   if(notification.origin === 'selected'){
-      navigationContext.navigate('NewMailItem', {
-        mailItemId: notification.data.mailItemId,
-        mailboxId: notification.data.mailboxId,
-        snapshotUrl: notification.data.snapshotUrl,
-        waitForResponseUntil: notification.data.waitForResponseUntil,
-        ocrText: notification.data.ocrText
-      })
+      if(notification.data.isAnonymous){
+        navigationContext.navigate('NewMailItem', {
+          mailItemId: notification.data.mailItemId,
+          mailboxId: notification.data.mailboxId,
+          snapshotUrl: notification.data.snapshotUrl,
+          waitForResponseUntil: notification.data.waitForResponseUntil,
+          ocrText: notification.data.ocrText
+        })
+      }
+      else{
+        navigationContext.navigate('TrustedMailItemDetails', {
+          mailItemId: notification.data.mailItemId,
+          company: notification.data.rfidCompany,
+          person: notification.data.rfidTagOwner,
+          personContactInfo: notification.data.rfidTagOwnerContact,
+          receivedAt: notification.data.receivedAt
+        })
+      }
   }
     
 };

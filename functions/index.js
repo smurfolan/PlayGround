@@ -32,6 +32,41 @@ function getSpecificAndFormattedMailboxItem(isAnonymoustMailItem, mailItemKey, m
   }
 }
 
+function getSpecificPushNotification(mailItem, context, deviceExpoToken){
+  if(mailItem.isAnonymous){
+    var topScoreImageTag = mailItem.topScoreImageTag !== '' ? mailItem.topScoreImageTag : ''
+    var middleScoreImageTag = mailItem.middleScoreImageTag !== '' ? `, ${mailItem.middleScoreImageTag}` : ''
+    var lowestScoreImageTag = mailItem.lowestScoreImageTag !== '' ? `, ${mailItem.lowestScoreImageTag}` : ''
+
+    return {
+      "to": deviceExpoToken,
+      "body": `${topScoreImageTag}${middleScoreImageTag}${lowestScoreImageTag}`,
+      "data":{
+        "isAnonymous": true,
+        "mailboxId": mailItem.mailboxId,
+        "snapshotUrl": mailItem.snapshotUrl,
+        "mailItemId": context.params.id,
+        "waitForResponseUntil": mailItem.waitForResponseUntil,
+        "ocrText": mailItem.ocrText
+      }
+    }
+  }
+  else {
+    return {
+      "to": deviceExpoToken,
+      "body": `Delivery from ${mailItem.rfidCompany}`,
+      "data":{
+        "isAnonymous": false,
+        "rfidTagOwner": mailItem.rfidTagOwner,
+        "rfidCompany": mailItem.rfidCompany,
+        "rfidTagOwnerContact": mailItem.rfidTagOwnerContact,
+        "receivedAt": mailItem.receivedAt,
+        "mailItemId": context.params.id
+      }
+    }
+  }
+}
+
 exports.getMyMailboxes = functions.https.onRequest((req, res) => {
     var userId = req.query.userId
     var mailboxesOwnedByThisUser = []
@@ -161,23 +196,12 @@ exports.sendPushNotification = functions.database.ref('MailItems/{id}').onCreate
             if(deviceExpoTokens.indexOf(childSnapshot.val().deviceExpoToken) < 0){
               // The format of the message which can be submited via expo is described here:
               // https://docs.expo.io/versions/latest/guides/push-notifications#message-format
-              var topScoreImageTag = changeValue.topScoreImageTag !== '' ? changeValue.topScoreImageTag : ''
-              var middleScoreImageTag = changeValue.middleScoreImageTag !== '' ? `, ${changeValue.middleScoreImageTag}` : ''
-              var lowestScoreImageTag = changeValue.lowestScoreImageTag !== '' ? `, ${changeValue.lowestScoreImageTag}` : ''
+              var pn = getSpecificPushNotification(
+                changeValue, 
+                context, 
+                childSnapshot.val().deviceExpoToken)
 
-              deviceExpoTokens.push(
-                {
-                    "to": childSnapshot.val().deviceExpoToken,
-                    "body": `${topScoreImageTag}${middleScoreImageTag}${lowestScoreImageTag}`,
-                    "data":{
-                      "mailboxId": changeValue.mailboxId,
-                      "snapshotUrl": changeValue.snapshotUrl,
-                      "mailItemId": context.params.id,
-                      "waitForResponseUntil": changeValue.waitForResponseUntil,
-                      "ocrText": changeValue.ocrText
-                    }
-                }
-              )
+              deviceExpoTokens.push(pn)
             }
           }
         })
