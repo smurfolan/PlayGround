@@ -224,6 +224,7 @@ exports.sendPushNotification = functions.database.ref('MailItems/{id}').onCreate
     })
 })
 
+// TRIGGERS
 exports.updateNumberOfMailboxItems = functions.database.ref('MailItems/{id}')
 .onUpdate((change) => {
     const before = change.before  // DataSnapshot before the change
@@ -246,3 +247,29 @@ exports.updateNumberOfMailboxItems = functions.database.ref('MailItems/{id}')
 
     return 0;
 })
+
+exports.onMailItemCreated = functions.database.ref('MailItems/{id}').onCreate((snapshot, context) => {
+  const createdState = snapshot.val();
+
+  if(!createdState || (typeof createdState) !== 'object'){
+    return null;
+  }
+
+  // For trusted deliveries, we can automatically increment the number of mailbox items.
+  if(!createdState.isAnonymous){
+    db.ref('/Mailboxes').child(createdState.mailboxId)
+        .once('value')
+        .then(function(snapshot){
+          var currentNumberOfMailItems = snapshot.val().numberOfMailItems
+          db.ref('/Mailboxes/' + createdState.mailboxId)
+          .update({numberOfMailItems: parseInt(currentNumberOfMailItems + 1)})
+
+          return 0
+        })
+        .catch(function(error) {
+          console.log(JSON.stringify(error));
+        });
+  }
+
+  return 0;
+});
