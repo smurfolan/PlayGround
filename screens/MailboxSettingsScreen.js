@@ -28,17 +28,20 @@ export default class MailboxSettingsScreen extends React.Component{
         timeToWaitBeforeOpenOrClose: null,
         // The following two are needed to determine if actual update was made
         openByDefaultInitial: false,
+        requireTwoFactorAuthForTrustedDeliveryInitial: false,
         timeToWaitBeforeOpenOrCloseInitial: null
       };
   }
 
   _updateDefaultBoxSettings = () => {
     if(this.state.openByDefault !== this.state.openByDefaultInitial ||
-        this.state.timeToWaitBeforeOpenOrClose !== this.state.timeToWaitBeforeOpenOrCloseInitial){
+        this.state.timeToWaitBeforeOpenOrClose !== this.state.timeToWaitBeforeOpenOrCloseInitial ||
+        this.state.requireTwoFactorAuthForTrustedDelivery !== this.state.requireTwoFactorAuthForTrustedDeliveryInitial){
           const body = { 
             mailboxId: this.state.observedMailboxId, 
             timeToWaitBeforeOpenOrClose: parseInt(this.state.timeToWaitBeforeOpenOrClose),
-            openByDefault: this.state.openByDefault
+            openByDefault: this.state.openByDefault,
+            requireTwoFactorAuthForTrustedDelivery: this.state.requireTwoFactorAuthForTrustedDelivery
           };
 
           fetch('https://us-central1-peepnee-backend.cloudfunctions.net/updateDefaultBoxSettings', {
@@ -49,7 +52,8 @@ export default class MailboxSettingsScreen extends React.Component{
             .then(() => {
               this.setState({
                 openByDefaultInitial: this.state.openByDefault,
-                timeToWaitBeforeOpenOrCloseInitial: this.state.timeToWaitBeforeOpenOrClose
+                timeToWaitBeforeOpenOrCloseInitial: this.state.timeToWaitBeforeOpenOrClose,
+                requireTwoFactorAuthForTrustedDeliveryInitial: this.state.requireTwoFactorAuthForTrustedDelivery
               })
 
               alert("Saved!")
@@ -76,9 +80,11 @@ export default class MailboxSettingsScreen extends React.Component{
         numberOfMailItems: parseInt(responseJson.numberOfMailItems),
         zipCode: parseInt(responseJson.zipCode),
         openByDefault: responseJson.openByDefault === true,
+        requireTwoFactorAuthForTrustedDelivery: responseJson.requireTwoFactorAuthForTrustedDelivery === true,
         timeToWaitBeforeOpenOrClose: parseInt(responseJson.timeToWaitBeforeOpenOrClose),
         openByDefaultInitial: responseJson.openByDefault === true,
-        timeToWaitBeforeOpenOrCloseInitial: parseInt(responseJson.timeToWaitBeforeOpenOrClose)      
+        requireTwoFactorAuthForTrustedDeliveryInitial: responseJson.requireTwoFactorAuthForTrustedDelivery === true,
+        timeToWaitBeforeOpenOrCloseInitial: parseInt(responseJson.timeToWaitBeforeOpenOrClose)
       })
     })
     .catch((error) => {
@@ -133,6 +139,13 @@ export default class MailboxSettingsScreen extends React.Component{
               style={styles.switchComponent}
               value={this.state.openByDefault} 
               onValueChange = {(value) => {this.setState({openByDefault:value})}}/>
+          </View>
+          <View style={styles.updateSettingsRow}>
+            <Text style={styles.updateInfoRowLabel}>{Constants.REQUIRE_2FA_FOR_TRUSTED_DELIVERY_LBL}</Text>
+            <Switch 
+              style={styles.switchComponent}
+              value={this.state.requireTwoFactorAuthForTrustedDelivery} 
+              onValueChange = {(value) => {this.setState({requireTwoFactorAuthForTrustedDelivery:value})}}/>
           </View>
         </View>      
       </View>

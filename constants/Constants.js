@@ -14,6 +14,7 @@ export default {
     UPDATE_SETTINGS_LBL: 'Update settings',
     DEFAULT_BEHAVIOR_AFTER_LBL: 'Default behavior after',
     OPEN_BY_DEFAULT_LBL: 'Open by default',
+    REQUIRE_2FA_FOR_TRUSTED_DELIVERY_LBL: 'Require 2FA for trusted delivery',
     MAILBOX_INFO_LBL: 'Mailbox info',
     ITEMS_LBL: 'Items',
     SETTINGS_LBL: 'Settings',
